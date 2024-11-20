@@ -72,6 +72,7 @@ class PetControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.totalCount").exists())
-                .andExpect(jsonPath("$.averageAge").doesNotExist()); // TODO: FIX THIS
+                // TODO: FIX THIS
+                .andExpect(jsonPath("$.averageAge").doesNotExist());
     }
 }
