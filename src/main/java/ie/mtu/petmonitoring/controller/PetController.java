@@ -7,6 +7,7 @@ import ie.mtu.petmonitoring.service.PetService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,6 +27,7 @@ public class PetController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or (hasRole('USER') and @petService.isPetOwner(authentication.name, #id))")
     public Pet getPet(@PathVariable Long id) {
         return petService.getPet(id);
     }
