@@ -31,15 +31,24 @@ type Query {
     getHouseholdsWithNoPets: [Household]
 }
 
+input AddPet {
+    name: String!
+    animalType: String!
+    breed: String
+    age: Int
+    householdEircode: ID!
+}
+
+input AddHousehold {
+    eircode: ID!
+    numberOfOccupants: Int!
+    maxNumberOfOccupants: Int!
+    ownerOccupied: Boolean!
+}
+
 type Mutation {
     # Pet Mutations
-    createPet(
-        name: String!
-        animalType: String!
-        breed: String
-        age: Int
-        householdEircode: ID!
-    ): Pet
+    createPet(Pet: AddPet!): Pet
 
     updatePetName(
         id: ID!
@@ -49,12 +58,7 @@ type Mutation {
     deletePet(id: ID!): Boolean
 
     # Household Mutations
-    createHousehold(
-        eircode: ID!
-        numberOfOccupants: Int!
-        maxNumberOfOccupants: Int!
-        ownerOccupied: Boolean!
-    ): Household
+    createHousehold(household: AddHousehold!): Household
 
     deleteHousehold(eircode: ID!): Boolean
 }

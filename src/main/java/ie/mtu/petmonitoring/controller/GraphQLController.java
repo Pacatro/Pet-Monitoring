@@ -57,7 +57,7 @@ public class GraphQLController {
 
     // Pet Mutations
     @MutationMapping
-    public Pet createPet(@Argument CreatePetRequest petRequest) {
+    public Pet createPet(@Argument("Pet") CreatePetRequest petRequest) {
         return petService.createPet(petRequest);
     }
 
@@ -78,7 +78,7 @@ public class GraphQLController {
 
     // Household Mutations
     @MutationMapping
-    public Household createHousehold(@Argument Household household) {
+    public Household createHousehold(@Argument("household") Household household) {
         return householdService.createHousehold(household);
     }
 
