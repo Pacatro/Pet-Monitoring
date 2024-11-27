@@ -44,12 +44,13 @@ class PetControllerIntegrationTest {
 
     @Test
     void createPet_ShouldCreateNewPet() throws Exception {
-        CreatePetRequest request = new CreatePetRequest();
-        request.setName("Max");
-        request.setAnimalType("Dog");
-        request.setBreed("Labrador");
-        request.setAge(5);
-        request.setHouseholdEircode("D01AB12");
+        CreatePetRequest request = new CreatePetRequest(
+            "Max",
+            "Dog",
+            "Labrador",
+            5,
+            "D01AB12"
+        );
 
         mockMvc.perform(post("/api/pets")
                         .contentType(MediaType.APPLICATION_JSON)

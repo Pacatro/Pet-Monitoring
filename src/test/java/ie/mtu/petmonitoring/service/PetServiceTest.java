@@ -52,12 +52,13 @@ class PetServiceTest {
         testPet.setAge(5);
         testPet.setHousehold(testHousehold);
 
-        createPetRequest = new CreatePetRequest();
-        createPetRequest.setName("Max");
-        createPetRequest.setAnimalType("Dog");
-        createPetRequest.setBreed("Labrador");
-        createPetRequest.setAge(5);
-        createPetRequest.setHouseholdEircode("D01AB12");
+        createPetRequest = new CreatePetRequest(
+            "Max",
+            "Dog",
+            "Labrador",
+            5,
+            "D01AB12"
+        );
     }
 
     @Test

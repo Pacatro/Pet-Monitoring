@@ -32,14 +32,14 @@ public class PetService {
     }
 
     public Pet createPet(CreatePetRequest request) {
-        Household household = householdRepository.findById(request.getHouseholdEircode())
+        Household household = householdRepository.findById(request.householdEircode())
                 .orElseThrow(() -> new RuntimeException("Household not found"));
 
         Pet pet = new Pet();
-        pet.setName(request.getName());
-        pet.setAnimalType(request.getAnimalType());
-        pet.setBreed(request.getBreed());
-        pet.setAge(request.getAge());
+        pet.setName(request.name());
+        pet.setAnimalType(request.animalType());
+        pet.setBreed(request.breed());
+        pet.setAge(request.age());
         pet.setHousehold(household);
 
         return petRepository.save(pet);
@@ -56,9 +56,6 @@ public class PetService {
     }
 
     public PetStatistics getPetStatistics() {
-        PetStatistics stats = new PetStatistics();
-        stats.setAverageAge(petRepository.getAverageAge());
-        stats.setTotalCount(petRepository.count());
-        return stats;
+        return new PetStatistics(petRepository.getAverageAge(), petRepository.count());
     }
 }

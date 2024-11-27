@@ -1,7 +1,9 @@
 package ie.mtu.petmonitoring.controller;
 
+import ie.mtu.petmonitoring.dto.CreateHouseholdRequest;
 import ie.mtu.petmonitoring.model.Household;
 import ie.mtu.petmonitoring.service.HouseholdService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +29,13 @@ public class HouseholdController {
     }
 
     @PostMapping
-    public Household createHousehold(@RequestBody Household household) {
+    public Household createHousehold(@Valid @RequestBody CreateHouseholdRequest request) {
+        Household household = new Household();
+        household.setEircode(request.eircode());
+        household.setNumberOfOccupants(request.numberOfOccupants());
+        household.setMaxNumberOfOccupants(request.maxNumberOfOccupants());
+        household.setOwnerOccupied(request.ownerOccupied());
+
         return householdService.createHousehold(household);
     }
 

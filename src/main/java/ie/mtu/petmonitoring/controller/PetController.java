@@ -4,6 +4,8 @@ import ie.mtu.petmonitoring.dto.CreatePetRequest;
 import ie.mtu.petmonitoring.dto.PetStatistics;
 import ie.mtu.petmonitoring.model.Pet;
 import ie.mtu.petmonitoring.service.PetService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Size;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +31,7 @@ public class PetController {
     }
 
     @PostMapping
-    public Pet createPet(@RequestBody CreatePetRequest request) {
+    public Pet createPet(@Valid @RequestBody CreatePetRequest request) {
         return petService.createPet(request);
     }
 
@@ -40,7 +42,10 @@ public class PetController {
     }
 
     @PatchMapping("/{id}/name")
-    public Pet updatePetName(@PathVariable Long id, @RequestBody String newName) {
+    public Pet updatePetName(
+            @PathVariable Long id,
+            @Valid @RequestBody @Size(min = 2, max = 50, message = "Name must be between 2 and 50 characters") String newName
+    ) {
         return petService.updatePetName(id, newName);
     }
 

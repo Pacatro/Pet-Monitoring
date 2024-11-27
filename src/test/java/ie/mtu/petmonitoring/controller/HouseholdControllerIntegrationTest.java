@@ -1,6 +1,6 @@
 package ie.mtu.petmonitoring.controller;
 
-import ie.mtu.petmonitoring.model.Household;
+import ie.mtu.petmonitoring.dto.CreateHouseholdRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,17 +26,33 @@ class HouseholdControllerIntegrationTest {
 
     @Test
     void createHousehold_ShouldCreateNewHousehold() throws Exception {
-        Household household = new Household();
-        household.setEircode("D02CD34");
-        household.setNumberOfOccupants(3);
-        household.setMaxNumberOfOccupants(5);
-        household.setOwnerOccupied(false);
+        CreateHouseholdRequest householdRequest = new CreateHouseholdRequest(
+            "D02CD34",
+            3,
+            5,
+            false
+        );
 
         mockMvc.perform(post("/api/households")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(household)))
+                        .content(objectMapper.writeValueAsString(householdRequest)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.eircode").value("D02CD34"));
+    }
+
+    @Test
+    void createHousehold_ShouldFailWithInvalidOccupants() throws Exception {
+        CreateHouseholdRequest householdRequest = new CreateHouseholdRequest(
+                "D02CD34",
+                -1, // Invalid parameter
+                5,
+                false
+        );
+
+        mockMvc.perform(post("/api/households")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(householdRequest)))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
