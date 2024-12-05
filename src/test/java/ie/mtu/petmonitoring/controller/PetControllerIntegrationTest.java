@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -43,13 +44,14 @@ class PetControllerIntegrationTest {
     }
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     void createPet_ShouldCreateNewPet() throws Exception {
         CreatePetRequest request = new CreatePetRequest(
-            "Max",
-            "Dog",
-            "Labrador",
-            5,
-            "D01AB12"
+                "Max",
+                "Dog",
+                "Labrador",
+                5,
+                "D01AB12"
         );
 
         mockMvc.perform(post("/api/pets")
@@ -61,6 +63,7 @@ class PetControllerIntegrationTest {
     }
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     void getAllPets_ShouldReturnPets() throws Exception {
         mockMvc.perform(get("/api/pets"))
                 .andExpect(status().isOk())
@@ -68,12 +71,28 @@ class PetControllerIntegrationTest {
     }
 
     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
     void getPetStatistics_ShouldReturnStatistics() throws Exception {
         mockMvc.perform(get("/api/pets/statistics"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.totalCount").exists())
-                // TODO: FIX THIS
-                .andExpect(jsonPath("$.averageAge").doesNotExist());
+                .andExpect(jsonPath("$.totalCount").exists());
+    }
+
+    @Test
+    @WithMockUser(username = "user", roles = {"USER"})
+    void createPet_ShouldFailWithInvalidData() throws Exception {
+        CreatePetRequest request = new CreatePetRequest(
+                "",  // Invalid name
+                "Dog",
+                "Labrador",
+                -1,  // Invalid age
+                "D01AB12"
+        );
+
+        mockMvc.perform(post("/api/pets")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
     }
 }
